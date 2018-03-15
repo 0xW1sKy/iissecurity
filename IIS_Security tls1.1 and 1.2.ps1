@@ -102,6 +102,8 @@ New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders
 
 # Set cipher suites order as secure as possible (Enables Perfect Forward Secrecy).
 $cipherSuitesOrder = @(
+  'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384',
+  'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256',
   'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P521',
   'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384',
   'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256',
@@ -113,7 +115,9 @@ $cipherSuitesOrder = @(
   'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P384',
   'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256',
   'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P384',
-  'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P256'
+  'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P256',
+  'TLS_RSA_WITH_AES_256_CBC_SHA',
+  'TLS_RSA_WITH_AES_128_CBC_SHA'  
 )
 $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
 New-ItemProperty -path 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002' -name 'Functions' -value $cipherSuitesAsString -PropertyType 'String' -Force | Out-Null
