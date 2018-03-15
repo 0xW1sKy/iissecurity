@@ -95,14 +95,10 @@ New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders
 New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\PKCS' -Force | Out-Null
 New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\PKCS' -name Enabled -value '0xffffffff' -PropertyType 'DWord' -Force | Out-Null
  
-# TLS_FALLBACK_SCSV SERVER 2008, 2003 only (not R2)
-#New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\UseScsvForTLS' -Force | Out-Null
-#New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\UseScsvForTLS' -Name Enabled -value 0 -PropertyType 'DWord' -Force | Out-Null
-
-
-
 # Set cipher suites order as secure as possible (Enables Perfect Forward Secrecy).
 $cipherSuitesOrder = @(
+  'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384',
+  'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256',
   'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P521',
   'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384',
   'TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256',
@@ -115,7 +111,8 @@ $cipherSuitesOrder = @(
   'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256',
   'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P384',
   'TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P256',
-  'TLS_RSA_WITH_AES_256_CBC_SHA'
+  'TLS_RSA_WITH_AES_256_CBC_SHA',
+  'TLS_RSA_WITH_AES_128_CBC_SHA'  
 )
 $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
 New-ItemProperty -path 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002' -name 'Functions' -value $cipherSuitesAsString -PropertyType 'String' -Force | Out-Null
